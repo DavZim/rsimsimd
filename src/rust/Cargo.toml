@@ -1,0 +1,12 @@
+[package]
+name = 'rsimsimd'
+version = '0.1.0'
+edition = '2021'
+
+[lib]
+crate-type = [ 'staticlib' ]
+name = 'rsimsimd'
+
+[dependencies]
+extendr-api = { version = "0.7.0", features = ["ndarray"] }
+simsimd = "6.3.4"
