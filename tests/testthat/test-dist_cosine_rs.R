@@ -20,8 +20,8 @@ ref_dist_cosine_list_list <- function(list1, list2) {
 }
 ref_dist_cosine_mat <- function(ll) {
   mat <- matrix(1, nrow = length(ll), ncol = length(ll))
-  for (i in seq(length(ll))) {
-    for (j in seq(length(ll))) {
+  for (i in seq_along(ll)) {
+    for (j in seq_along(ll)) {
       v <- ref_dist_cosine(ll[[i]], ll[[j]])
       mat[i, j] <- v
       mat[j, i] <- v
@@ -32,6 +32,17 @@ ref_dist_cosine_mat <- function(ll) {
 
 
 test_that("Internal Rust functions work", {
+
+  for (i in seq(10000)) {
+    v1 <- round(rnorm(10), 6)
+    v2 <- round(rnorm(10), 6)
+
+    expect_equal(
+      rsimsimd:::dist_cosine_rs(v1, v2),
+      ref_dist_cosine(v1, v2)
+    )
+  }
+
   # test against hand-calculated result
   expect_equal(
     rsimsimd:::dist_cosine_rs(c(1, 2, 3), c(4, 5, 6)),

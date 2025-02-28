@@ -10,22 +10,22 @@ test_that("Test that dist_cosine fails expectedly", {
 
 
 test_that("Test that dist_cosine returns the correct dimensions", {
-  N <- 10 # number of embeddings
+  n <- 10 # number of embeddings
 
   # check dimensions
   # 1-1
-  expect_equal(length(dist_cosine(rnorm(N), rnorm(N))), 1)
+  expect_equal(length(dist_cosine(rnorm(n), rnorm(n))), 1)
   # 1-many
-  expect_equal(length(dist_cosine(matrix(rnorm(N * 10), ncol = N), rnorm(N))),
+  expect_equal(length(dist_cosine(matrix(rnorm(n * 10), ncol = n), rnorm(n))),
                10)
 
   # many-1
-  expect_equal(length(dist_cosine(rnorm(N), matrix(rnorm(N * 10), ncol = N))),
+  expect_equal(length(dist_cosine(rnorm(n), matrix(rnorm(n * 10), ncol = n))),
                10)
 
   # 3 elements x 5 elements results in 3 x 5 matrix
-  mat_3 <- matrix(rnorm(3 * N), ncol = N)
-  mat_5 <- matrix(rnorm(5 * N), ncol = N)
+  mat_3 <- matrix(rnorm(3 * n), ncol = n)
+  mat_5 <- matrix(rnorm(5 * n), ncol = n)
   expect_equal(dim(dist_cosine(mat_3, mat_5)),
                c(3, 5))
 
