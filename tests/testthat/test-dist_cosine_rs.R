@@ -37,9 +37,15 @@ test_that("Internal Rust functions work", {
     v1 <- round(rnorm(10), 6)
     v2 <- round(rnorm(10), 6)
 
+    if (rsimsimd:::dist_cosine_rs(v1, v2) != ref_dist_cosine(v1, v2)) {
+      stop(sprintf("(%s); (%s)",
+                   paste(v1, collapse = ", "),
+                   paste(v2, collapse = ", ")))
+    }
     expect_equal(
       rsimsimd:::dist_cosine_rs(v1, v2),
-      ref_dist_cosine(v1, v2)
+      ref_dist_cosine(v1, v2),
+      tolerance = 1e-6
     )
   }
 
@@ -61,7 +67,7 @@ test_that("Internal Rust functions work", {
 
 
   # one matrix -> all combinations
-  list1 <- lapply(seq(3), \(x) rnorm(1536))
+  list1 <- lapply(seq(3), function(x) rnorm(1536))
 
   res <- rsimsimd:::dist_cosine_mat_rs(list1)
   expect_equal(dim(res), c(3, 3))
@@ -85,7 +91,7 @@ test_that("Internal Rust functions work", {
 
   # many-many relationship
   # create a second matrix to test many-many relations
-  list2 <- lapply(seq(3), \(x) rnorm(1536))
+  list2 <- lapply(seq(3), function(x) rnorm(1536))
   expect_equal(length(list1), length(list2))
 
   res <- rsimsimd:::dist_cosine_mult_mult_rs(list1, list2)
