@@ -3,3 +3,7 @@
 ^src/\.cargo$
 ^README\.Rmd$
 ^LICENSE\.md$
+^\.github$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
