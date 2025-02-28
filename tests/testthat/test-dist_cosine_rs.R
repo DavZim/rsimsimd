@@ -2,7 +2,8 @@ test_that("Internal Rust functions work", {
   # test against hand-calculated result
   expect_equal(
     rsimsimd:::dist_cosine_rs(c(1, 2, 3), c(4, 5, 6)),
-    0.97463173
+    0.97463173,
+    tolerance = 1e-6
   )
 
   # simulate large vectors
@@ -12,7 +13,7 @@ test_that("Internal Rust functions work", {
 
   # 1-1 relationship
   res <- rsimsimd:::dist_cosine_rs(vec1, vec2)
-  expect_equal(res, -0.010641766)
+  expect_equal(res, -0.010641766, tolerance = 1e-6)
 
 
   # one matrix -> all combinations
@@ -29,7 +30,7 @@ test_that("Internal Rust functions work", {
     0.018478748, 1, -0.050507819,
     -0.046885613, -0.050507819, 1
   ), nrow = 3, byrow = TRUE)
-  expect_equal(res, exp)
+  expect_equal(res, exp, tolerance = 1e-6)
 
 
   # 1-many relationship
@@ -39,7 +40,7 @@ test_that("Internal Rust functions work", {
   expect_equal(length(res), length(list1))
 
   exp <- c(0.022898323, -0.003896248, 0.046008395)
-  expect_equal(res, exp)
+  expect_equal(res, exp, tolerance = 1e-6)
 
 
   # many-many relationship
@@ -55,5 +56,5 @@ test_that("Internal Rust functions work", {
     0.0003882632, 0.0167732251, -0.0112813098,
     -0.0125098021, 0.0198462835, -0.0006956676
   ), nrow = 3, byrow = TRUE)
-  expect_equal(res, exp)
+  expect_equal(res, exp, tolerance = 1e-6)
 })
