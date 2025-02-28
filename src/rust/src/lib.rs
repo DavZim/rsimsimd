@@ -35,27 +35,30 @@ fn dist_cosine_rs(vec_a: Vec<f64>, vec_b: Vec<f64>) -> f64 {
 }
 
 #[extendr]
-fn dist_cosine_single_mult_rs(vec: Vec<f64>, mat: ArrayView2<f64>) -> Vec<f64> {
-  mat.outer_iter()
-    .map(|a| 1.0 - f64::cosine(&a.to_vec(), &vec).expect("Vector elements must be of the same length"))
-    .collect()
+fn dist_cosine_single_mult_rs(vec: Vec<f64>, ll: List) -> Vec<f64> {
+  ll.iter()
+  .map(|(_, item)| {
+    let vec_b: Vec<f64> = item.clone().try_into().expect("Elements must be numeric vectors");
+    1.0 - f64::cosine(&vec, &vec_b).expect("Vector elements must be of the same length")
+  })
+  .collect()
 }
 
+
 #[extendr]
-fn dist_cosine_mult_mult_rs(mat_a: ArrayView2<f64>, mat_b: ArrayView2<f64>) -> Robj {
-  assert_eq!(mat_a.dim().1, mat_b.dim().1, "Matrices must have the same number of columns");
+fn dist_cosine_mult_mult_rs(ll_a: List, ll_b: List) -> Robj {
+  let len_a = ll_a.len();
+  let len_b = ll_b.len();
+  let mut result = Array2::<f64>::zeros((len_a, len_b));
 
-  let (rows_a, _) = mat_a.dim();
-  let (rows_b, _) = mat_b.dim();
-  let mut result = Array2::<f64>::zeros((rows_a, rows_b));
+  for (i, (_, item_a)) in ll_a.iter().enumerate() {
+    let vec_a: Vec<f64> = item_a.clone().try_into().expect("Elements of ll_a must be numeric vectors");
 
-  for i in 0..rows_a {
-    for j in 0..rows_b {
-      let vec_a = mat_a.row(i).to_vec();
-      let vec_b = mat_b.row(j).to_vec();
+    for (j, (_, item_b)) in ll_b.iter().enumerate() {
+      let vec_b: Vec<f64> = item_b.clone().try_into().expect("Elements of ll_b must be numeric vectors");
 
       let dist = 1.0 - f64::cosine(&vec_a, &vec_b)
-        .expect("Vectors must be of the same length");
+        .expect("Vector elements must be of the same length");
 
       result[[i, j]] = dist;
     }
@@ -65,22 +68,26 @@ fn dist_cosine_mult_mult_rs(mat_a: ArrayView2<f64>, mat_b: ArrayView2<f64>) -> R
 }
 
 #[extendr]
-fn dist_cosine_mat_rs(mat: ArrayView2<f64>) -> Robj {
-  let (rows, _) = mat.dim();
-  let mut result = Array2::<f64>::ones((rows, rows));
+fn dist_cosine_mat_rs(ll: List) -> Robj {
+  let len = ll.len();
+  let mut result = Array2::<f64>::ones((len, len));
 
-  for i in 0..rows {
+  let vectors: Vec<Vec<f64>> = ll.iter()
+    .map(|(_, item)| item.clone().try_into().expect("Elements must be numeric vectors"))
+    .collect();
+
+  for i in 0..len {
     for j in 0..i {
-      let dist = 1.0 - f64::cosine(&mat.row(i).to_vec(), &mat.row(j).to_vec())
+      let dist = 1.0 - f64::cosine(&vectors[i], &vectors[j])
         .expect("Vectors must be of the same length");
+
       result[[i, j]] = dist;
-      result[[j, i]] = dist; // Mirror the lower triangle to upper
+      result[[j, i]] = dist; // Mirror the lower triangle to the upper
     }
   }
 
   result.try_into().unwrap()
 }
-
 
 
 

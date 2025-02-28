@@ -5,7 +5,7 @@ test_that("Test that dist_cosine fails expectedly", {
                regexp = "x and y must have the same length")
   expect_error(dist_cosine(matrix(seq(9) + 0.01, nrow = 3),
                            matrix(seq(4) + 0.01, nrow = 2)),
-               regexp = "x and y must have the same number of columns")
+               regexp = "Each element of x and y must have the same length")
 })
 
 

@@ -101,7 +101,7 @@ lsa_cosine <- function(x, y) {
 }
 
 set.seed(123)
-N <- 1536
+n_dimensions <- 1536
 v1 <- rnorm(N)
 v2 <- rnorm(N)
 
@@ -111,23 +111,25 @@ bench::mark(
 )
 
 # compare 1 embedding to 1'000 embeddings
-mat_1k <- matrix(rnorm(1000 * N), ncol = N)
+ll_1k <- lapply(seq(1000), function(i) rnorm(n_dimensions))
+
 bench::mark(
-  sapply(seq(nrow(mat_1k)), function(i) lsa_cosine(v1, mat_1k[i, ])),
-  dist_cosine(v1, mat_1k),
+  sapply(ll_1k, function(ll) lsa_cosine(v1, ll)),
+  dist_cosine(v1, ll_1k),
   check = FALSE # rounding errors
 )
 
 # compare 1 embedding to 100'000 embeddings
-mat_100k <- matrix(rnorm(100000 * N), ncol = N)
+ll_100k <- lapply(seq(100000), function(i) rnorm(n_dimensions))
+
 bench::mark(
-  sapply(seq(nrow(mat_100k)), function(i) lsa_cosine(v1, mat_100k[i, ])),
-  rsimsimd:::dist_cosine_single_mult_rs(v1, mat_100k),
+  sapply(ll_100k, function(ll) lsa_cosine(v1, ll)),
+  dist_cosine(v1, ll_100k),
   check = FALSE # rounding errors
 )
 
 # 1k x 1k comparisons => 1mln comparisons
 bench::mark(
-  rsimsimd:::dist_cosine_mat_rs(mat_1k)
+  dist_cosine(ll_1k)
 )
 ```

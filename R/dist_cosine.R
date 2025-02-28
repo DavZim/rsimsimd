@@ -48,27 +48,49 @@
 #' # 3x5 elements results in a 3x5 matrix
 #' dist_cosine(emb_mat_3, emb_mat_5)
 dist_cosine <- function(x, y = NULL) {
-  if (is.list(x)) x <- do.call(rbind, x)
-  stopifnot("x must be numeric or a list of numerics" = is.numeric(x))
+  # there are different valid options for x and y:
+  # 1: only a list of vector (or matrix) (y is NULL)
+  # 2: single vector - single vector
+  # 3: list of vector (or matrix) - list of vector (or matrix)
+  # 4: single vector - list of vector (or matrix)
+  # 5: list of vector (or matrix) - single vector
+  
+  if (is.matrix(x)) x <- split(x, seq_len(nrow(x)))
+  stopifnot("x must be numeric (vector, list, or matrix)" = is_good_input(x))
 
   if (is.null(y)) {
-    stopifnot("x must be a matrix or a list when y is not given" = is.matrix(x))
+    # case 1
+    stopifnot("x must be a matrix or a list when y is not given" = is.list(x))
     return(dist_cosine_mat_rs(x))
   }
-  if (is.list(y)) y <- do.call(rbind, y)
-  stopifnot("y must be numeric or a list of numerics" = is.numeric(y))
+  if (is.matrix(y)) y <- split(y, seq_len(nrow(y)))
+  stopifnot("y must be numeric (vector, list, or matrix)" = is_good_input(y))
 
-  if (is.vector(x) && is.vector(y)) {
+  if (is.numeric(x) && is.numeric(y)) { # both are vectors and not list of vecs
+    # case 2
     stopifnot("x and y must have the same length" = length(x) == length(y))
     return(dist_cosine_rs(x, y))
   }
-  if (is.matrix(x) && is.matrix(y)) {
-    stopifnot(
-      "x and y must have the same number of columns" = ncol(x) == ncol(y)
-    )
+  if (is.list(x) && is.list(y)) {
+    # case 3
+    # check that each element has the same length
+    lapply(seq_along(x), \(i) {
+      if (length(x[[i]]) != length(y[[1]]))
+        stop("Each element of x and y must have the same length")
+    })
     return(dist_cosine_mult_mult_rs(x, y))
   }
-  if (is.vector(x)) return(dist_cosine_single_mult_rs(x, y))
-  # x must be a vector
+  # case 4
+  # x is a vector, y is a list
+  if (is.numeric(x)) return(dist_cosine_single_mult_rs(x, y))
+
+  # case 5
+  # x is a list, y is a vector
   return(dist_cosine_single_mult_rs(y, x))
+}
+
+# checks if the x or y input of dist_cosine is good
+is_good_input <- function(x) {
+  if (is.list(x)) return(all(sapply(x, is.numeric)))
+  is.numeric(x)
 }

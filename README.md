@@ -99,7 +99,7 @@ lsa_cosine <- function(x, y) {
 }
 
 set.seed(123)
-N <- 1536
+n_dimensions <- 1536
 v1 <- rnorm(N)
 v2 <- rnorm(N)
 
@@ -110,43 +110,45 @@ bench::mark(
 #> # A tibble: 2 × 6
 #>   expression               min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr>          <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 lsa_cosine(v1, v2)    6.78µs   7.21µs   118041.        0B     11.8
-#> 2 dist_cosine(v1, v2)   5.69µs   7.18µs   115363.        0B     11.5
+#> 1 lsa_cosine(v1, v2)    6.79µs   7.47µs   123775.        0B      0  
+#> 2 dist_cosine(v1, v2)   6.99µs   8.89µs   107573.        0B     10.8
 
 # compare 1 embedding to 1'000 embeddings
-mat_1k <- matrix(rnorm(1000 * N), ncol = N)
+ll_1k <- lapply(seq(1000), function(i) rnorm(n_dimensions))
+
 bench::mark(
-  sapply(seq(nrow(mat_1k)), function(i) lsa_cosine(v1, mat_1k[i, ])),
-  dist_cosine(v1, mat_1k),
+  sapply(ll_1k, function(ll) lsa_cosine(v1, ll)),
+  dist_cosine(v1, ll_1k),
   check = FALSE # rounding errors
 )
 #> # A tibble: 2 × 6
-#>   expression                            min  median `itr/sec` mem_alloc `gc/sec`
-#>   <bch:expr>                         <bch:> <bch:t>     <dbl> <bch:byt>    <dbl>
-#> 1 sapply(seq(nrow(mat_1k)), functio… 16.1ms 17.96ms      49.4    17.7MB     2.06
-#> 2 dist_cosine(v1, mat_1k)             2.9ms  3.72ms     260.     7.86KB     0
+#>   expression                             min median `itr/sec` mem_alloc `gc/sec`
+#>   <bch:expr>                          <bch:> <bch:>     <dbl> <bch:byt>    <dbl>
+#> 1 sapply(ll_1k, function(ll) lsa_cos… 8.12ms 8.34ms      117.    31.7KB     2.05
+#> 2 dist_cosine(v1, ll_1k)              1.16ms 1.37ms      655.    35.6KB     2.04
 
 # compare 1 embedding to 100'000 embeddings
-mat_100k <- matrix(rnorm(100000 * N), ncol = N)
+ll_100k <- lapply(seq(100000), function(i) rnorm(n_dimensions))
+
 bench::mark(
-  sapply(seq(nrow(mat_100k)), function(i) lsa_cosine(v1, mat_100k[i, ])),
-  rsimsimd:::dist_cosine_single_mult_rs(v1, mat_100k),
+  sapply(ll_100k, function(ll) lsa_cosine(v1, ll)),
+  dist_cosine(v1, ll_100k),
   check = FALSE # rounding errors
 )
 #> Warning: Some expressions had a GC in every iteration; so filtering is
 #> disabled.
 #> # A tibble: 2 × 6
-#>   expression                            min  median `itr/sec` mem_alloc `gc/sec`
-#>   <bch:expr>                       <bch:tm> <bch:t>     <dbl> <bch:byt>    <dbl>
-#> 1 sapply(seq(nrow(mat_100k)), fun…    2.17s   2.17s     0.461    1.73GB     2.77
-#> 2 rsimsimd:::dist_cosine_single_m… 365.09ms 367.3ms     2.72    781.3KB     0
+#>   expression                             min median `itr/sec` mem_alloc `gc/sec`
+#>   <bch:expr>                           <bch> <bch:>     <dbl> <bch:byt>    <dbl>
+#> 1 sapply(ll_100k, function(ll) lsa_co… 933ms  933ms      1.07    3.29MB     1.07
+#> 2 dist_cosine(v1, ll_100k)             165ms  165ms      5.70    3.67MB     0
 
 # 1k x 1k comparisons => 1mln comparisons
 bench::mark(
-  rsimsimd:::dist_cosine_mat_rs(mat_1k)
+  dist_cosine(ll_1k)
 )
 #> # A tibble: 1 × 6
-#>   expression                             min median `itr/sec` mem_alloc `gc/sec`
-#>   <bch:expr>                           <bch> <bch:>     <dbl> <bch:byt>    <dbl>
-#> 1 rsimsimd:::dist_cosine_mat_rs(mat_1… 5.29s  5.29s     0.189    7.63MB        0
+#>   expression              min   median `itr/sec` mem_alloc `gc/sec`
+#>   <bch:expr>         <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
+#> 1 dist_cosine(ll_1k)    294ms    305ms      3.28    7.66MB        0
 ```

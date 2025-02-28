@@ -10,15 +10,21 @@
 #' @useDynLib rsimsimd, .registration = TRUE
 NULL
 
+#' Testing function
+#' @export
+foo_1_many <- function(vec, ll) .Call(wrap__foo_1_many, vec, ll)
+
+dist_cosine_single_mult_rs_mat <- function(vec, mat) .Call(wrap__dist_cosine_single_mult_rs_mat, vec, mat)
+
 get_capabilities_rs <- function() .Call(wrap__get_capabilities_rs)
 
 dist_cosine_rs <- function(vec_a, vec_b) .Call(wrap__dist_cosine_rs, vec_a, vec_b)
 
-dist_cosine_single_mult_rs <- function(vec, mat) .Call(wrap__dist_cosine_single_mult_rs, vec, mat)
+dist_cosine_single_mult_rs <- function(vec, ll) .Call(wrap__dist_cosine_single_mult_rs, vec, ll)
 
-dist_cosine_mult_mult_rs <- function(mat_a, mat_b) .Call(wrap__dist_cosine_mult_mult_rs, mat_a, mat_b)
+dist_cosine_mult_mult_rs <- function(ll_a, ll_b) .Call(wrap__dist_cosine_mult_mult_rs, ll_a, ll_b)
 
-dist_cosine_mat_rs <- function(mat) .Call(wrap__dist_cosine_mat_rs, mat)
+dist_cosine_mat_rs <- function(ll) .Call(wrap__dist_cosine_mat_rs, ll)
 
 
 # nolint end
