@@ -38,10 +38,12 @@ for (i in seq(10000)) {
   got <- rsimsimd:::dist_cosine_rs(v1, v2)
   diff <- exp - got
   if (abs(diff) >= 1e-6) {
-    stop(sprintf("(%s); (%s); exp %.10f; got: %.10f; diff %.10f",
+    cap <- rsimdimd::get_capabilities()
+    stop(sprintf("(%s); (%s); exp %.10f; got: %.10f; diff %.10f; cap: %s",
                  paste(v1, collapse = ", "),
                  paste(v2, collapse = ", "),
-                 exp, got, diff))
+                 exp, got, diff,
+                 paste(sprintf("%s=%s", names(cap), cap), collapse = ",")))
   }
 }
 
