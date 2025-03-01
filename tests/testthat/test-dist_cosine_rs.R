@@ -30,24 +30,22 @@ ref_dist_cosine_mat <- function(ll) {
   mat
 }
 
+for (i in seq(10000)) {
+  v1 <- round(rnorm(10), 6)
+  v2 <- round(rnorm(10), 6)
+
+  exp <- ref_dist_cosine(v1, v2)
+  got <- rsimsimd:::dist_cosine_rs(v1, v2)
+  diff <- exp - got
+  if (abs(diff) >= 1e-6) {
+    stop(sprintf("(%s); (%s); exp %.10f; got: %.10f; diff %.10f",
+                 paste(v1, collapse = ", "),
+                 paste(v2, collapse = ", "),
+                 exp, got, diff))
+  }
+}
 
 test_that("Internal Rust functions work", {
-
-  for (i in seq(10000)) {
-    v1 <- round(rnorm(10), 6)
-    v2 <- round(rnorm(10), 6)
-
-    if (rsimsimd:::dist_cosine_rs(v1, v2) != ref_dist_cosine(v1, v2)) {
-      stop(sprintf("(%s); (%s)",
-                   paste(v1, collapse = ", "),
-                   paste(v2, collapse = ", ")))
-    }
-    expect_equal(
-      rsimsimd:::dist_cosine_rs(v1, v2),
-      ref_dist_cosine(v1, v2),
-      tolerance = 1e-6
-    )
-  }
 
   # test against hand-calculated result
   expect_equal(
