@@ -11,7 +11,7 @@ Description: More about what it does (maybe more than one line)
     Use four spaces when indenting paragraphs within the Description.
 License: Apache License (>= 2)
 URL: https://davzim.github.io/rsimsimd/, https://github.com/DavZim/rsimsimd/
-BugReports: https://github.com/DavZim/rbm25/issues
+BugReports: https://github.com/DavZim/rsimsimd/issues
 SystemRequirements: Cargo (Rust's package manager), rustc >= 1.71.1
 Encoding: UTF-8
 LazyData: true
@@ -21,4 +21,4 @@ Suggests:
     bench,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
-Config/rbm25/MSRV: 1.71.1
+Config/rsimsimd/MSRV: 1.71.1
