@@ -1,0 +1,22 @@
+Authors of vendored cargo crates
+ - autocfg 1.4.0: Josh Stone
+ - cc 1.2.15: Alex Crichton
+ - extendr-api 0.7.1: andy-thomason, Thomas Down, Mossa Merhi Reimert, Claus O. Wilke, Hiroaki Yutani, Ilia A. Kosenkov, Michael Milton
+ - extendr-macros 0.7.1: andy-thomason, Thomas Down, Mossa Merhi Reimert, Claus O. Wilke, Hiroaki Yutani, Ilia A. Kosenkov, Michael Milton
+ - libR-sys 0.7.1: andy-thomason, Thomas Down, Mossa Merhi Reimert, Claus O. Wilke, Ilia A. Kosenkov, Hiroaki Yutani
+ - matrixmultiply 0.3.9: bluss, R. Janis Goldschmidt
+ - ndarray 0.15.6: Ulrik Sverdrup "bluss", Jim Turner
+ - num-complex 0.4.6: The Rust Project Developers
+ - num-integer 0.1.46: The Rust Project Developers
+ - num-traits 0.2.19: The Rust Project Developers
+ - once_cell 1.20.3: Aleksey Kladov
+ - paste 1.0.15: David Tolnay
+ - proc-macro2 1.0.93: David Tolnay, Alex Crichton
+ - quote 1.0.38: David Tolnay
+ - rawpointer 0.2.1: bluss
+ - shlex 1.3.0: comex, Fenhl, Adrian Taylor, Alex Touchet, Daniel Parks, Garrett Berg
+ - simsimd 6.3.4: Ash Vardanian
+ - syn 2.0.98: David Tolnay
+ - unicode-ident 1.0.17: David Tolnay
+
+(This file was auto-generated from 'cargo metadata' on 2025-03-01)

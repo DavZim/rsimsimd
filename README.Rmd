@@ -50,10 +50,10 @@ dist_cosine(c(1, 2, 3),
 
 # more realistic embedding use case
 # with 1536 (OpenAI) embedding dimensions
-N <- 1536
+n_dimensions <- 1536
 set.seed(123)
-vec1 <- rnorm(N)
-vec2 <- rnorm(N)
+vec1 <- rnorm(n_dimensions)
+vec2 <- rnorm(n_dimensions)
 
 dist_cosine(vec1, vec2)
 
@@ -61,10 +61,10 @@ dist_cosine(vec1, vec2)
 # and you want to compare a list of vectors, you can achieve this like so
 
 # simulate a DB of 1000 embedding vectors
-db <- lapply(seq(1000), function(x) rnorm(N))
+db <- lapply(seq(1000), function(x) rnorm(n_dimensions))
 
 # simulate a lookup of 3 embedding vectors
-lookup <- lapply(seq(3), function(x) rnorm(N))
+lookup <- lapply(seq(3), function(x) rnorm(n_dimensions))
 
 res <- dist_cosine(lookup, db)
 # one row for each lookup, one column for each DB entry
@@ -82,16 +82,8 @@ dim(res)
 
 - [`get_capabilities()`] reports current hardware capabilities
 
-[ ] GH actions
-[ ] vendor dependencies
-[ ] list authors
-[ ] pkgdown website
-
-
-
 
 ## Benchmark
-
 
 ```{R benchmark, eval=requireNamespace("bench", quietly = TRUE)}
 # alternative implementation of cosine, taken from lsa

@@ -54,7 +54,7 @@ dist_cosine <- function(x, y = NULL) {
   # 3: list of vector (or matrix) - list of vector (or matrix)
   # 4: single vector - list of vector (or matrix)
   # 5: list of vector (or matrix) - single vector
-  
+
   if (is.matrix(x)) x <- split(x, seq_len(nrow(x)))
   stopifnot("x must be numeric (vector, list, or matrix)" = is_good_input(x))
 
@@ -74,7 +74,7 @@ dist_cosine <- function(x, y = NULL) {
   if (is.list(x) && is.list(y)) {
     # case 3
     # check that each element has the same length
-    lapply(seq_along(x), \(i) {
+    lapply(seq_along(x), function(i) {
       if (length(x[[i]]) != length(y[[1]]))
         stop("Each element of x and y must have the same length")
     })

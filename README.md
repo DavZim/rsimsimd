@@ -45,10 +45,10 @@ dist_cosine(c(1, 2, 3),
 
 # more realistic embedding use case
 # with 1536 (OpenAI) embedding dimensions
-N <- 1536
+n_dimensions <- 1536
 set.seed(123)
-vec1 <- rnorm(N)
-vec2 <- rnorm(N)
+vec1 <- rnorm(n_dimensions)
+vec2 <- rnorm(n_dimensions)
 
 dist_cosine(vec1, vec2)
 #> [1] -0.01064177
@@ -57,10 +57,10 @@ dist_cosine(vec1, vec2)
 # and you want to compare a list of vectors, you can achieve this like so
 
 # simulate a DB of 1000 embedding vectors
-db <- lapply(seq(1000), function(x) rnorm(N))
+db <- lapply(seq(1000), function(x) rnorm(n_dimensions))
 
 # simulate a lookup of 3 embedding vectors
-lookup <- lapply(seq(3), function(x) rnorm(N))
+lookup <- lapply(seq(3), function(x) rnorm(n_dimensions))
 
 res <- dist_cosine(lookup, db)
 # one row for each lookup, one column for each DB entry
@@ -79,16 +79,8 @@ dim(res)
 
 - [`get_capabilities()`] reports current hardware capabilities
 
-[ ] GH actions
-[ ] vendor dependencies
-[ ] list authors
-[ ] pkgdown website
-
-
-
 
 ## Benchmark
-
 
 
 ``` r
@@ -110,8 +102,8 @@ bench::mark(
 #> # A tibble: 2 × 6
 #>   expression               min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr>          <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 lsa_cosine(v1, v2)    6.79µs   7.47µs   123775.        0B      0  
-#> 2 dist_cosine(v1, v2)   6.99µs   8.89µs   107573.        0B     10.8
+#> 1 lsa_cosine(v1, v2)    6.79µs   7.24µs   118470.        0B        0
+#> 2 dist_cosine(v1, v2)   6.72µs    8.5µs    79961.        0B        0
 
 # compare 1 embedding to 1'000 embeddings
 ll_1k <- lapply(seq(1000), function(i) rnorm(n_dimensions))
@@ -124,8 +116,8 @@ bench::mark(
 #> # A tibble: 2 × 6
 #>   expression                             min median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr>                          <bch:> <bch:>     <dbl> <bch:byt>    <dbl>
-#> 1 sapply(ll_1k, function(ll) lsa_cos… 8.12ms 8.34ms      117.    31.7KB     2.05
-#> 2 dist_cosine(v1, ll_1k)              1.16ms 1.37ms      655.    35.6KB     2.04
+#> 1 sapply(ll_1k, function(ll) lsa_cos… 7.94ms 8.52ms      112.    31.7KB     2.07
+#> 2 dist_cosine(v1, ll_1k)              1.25ms 1.78ms      521.    35.6KB     0
 
 # compare 1 embedding to 100'000 embeddings
 ll_100k <- lapply(seq(100000), function(i) rnorm(n_dimensions))
@@ -138,10 +130,10 @@ bench::mark(
 #> Warning: Some expressions had a GC in every iteration; so filtering is
 #> disabled.
 #> # A tibble: 2 × 6
-#>   expression                             min median `itr/sec` mem_alloc `gc/sec`
-#>   <bch:expr>                           <bch> <bch:>     <dbl> <bch:byt>    <dbl>
-#> 1 sapply(ll_100k, function(ll) lsa_co… 933ms  933ms      1.07    3.29MB     1.07
-#> 2 dist_cosine(v1, ll_100k)             165ms  165ms      5.70    3.67MB     0
+#>   expression                           min   median `itr/sec` mem_alloc `gc/sec`
+#>   <bch:expr>                      <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
+#> 1 sapply(ll_100k, function(ll) l…    1.07s    1.07s     0.932    3.29MB    0.932
+#> 2 dist_cosine(v1, ll_100k)        170.37ms 178.28ms     5.67     5.96MB    0
 
 # 1k x 1k comparisons => 1mln comparisons
 bench::mark(
@@ -150,5 +142,5 @@ bench::mark(
 #> # A tibble: 1 × 6
 #>   expression              min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr>         <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 dist_cosine(ll_1k)    294ms    305ms      3.28    7.66MB        0
+#> 1 dist_cosine(ll_1k)    299ms    307ms      3.26    7.66MB        0
 ```

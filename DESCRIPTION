@@ -2,11 +2,17 @@ Package: rsimsimd
 Type: Package
 Title: What the Package Does (Title Case)
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
+Authors@R: c(
+    person("David", "Zimmermann-Kollenda", , "david_j_zimmermann@hotmail.com", role = c("aut", "cre")),
+    person("Ash", "Vardanian", role = "aut", comment = "simsimd Rust library"),
+    person("Authors of the dependency Rust crates", role = "aut", comment = "see AUTHORS file")
+  )
 Description: More about what it does (maybe more than one line)
     Use four spaces when indenting paragraphs within the Description.
 License: Apache License (>= 2)
+URL: https://davzim.github.io/rsimsimd/, https://github.com/DavZim/rsimsimd/
+BugReports: https://github.com/DavZim/rbm25/issues
+SystemRequirements: Cargo (Rust's package manager), rustc >= 1.71.1
 Encoding: UTF-8
 LazyData: true
 Config/rextendr/version: 0.3.1
@@ -15,3 +21,4 @@ Suggests:
     bench,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
+Config/rbm25/MSRV: 1.71.1
